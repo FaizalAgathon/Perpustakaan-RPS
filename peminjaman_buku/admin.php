@@ -2,7 +2,8 @@
 require "koneksi.php";
 
 //Data Pengembalian
-$pengembalian = query("SELECT * FROM pengembalian");
+$pengembalian = query("SELECT *,buku.nama AS nama_buku 
+  FROM buku RIGHT JOIN pengembalian ON pengembalian.id_pengembali = buku.id");
 
 //Data Histori
 $histori = query("SELECT * FROM histori");
@@ -78,16 +79,17 @@ if (!isset($_POST["username"]) || !isset($_POST["password"]) || !isset($db_usern
       <div class="row w-100 p-1">
         <h2 class="fw-bold text-white m-auto mt-2 pb-1 judul">Peminjaman Buku</h2>
         <form class="d-flex input-group justify-content-center" role="search">
-          <input class="form-control border-info mt-2 rounded-end rounded-pill " type="search" placeholder="Search" aria-label="Search">
+          <input class="form-control border-info mt-2 rounded-end rounded-pill w-75" type="search" placeholder="Search" aria-label="Search" id="inputCari">
           <button class="btn btn-primary mt-2 rounded-start rounded-pill" type="submit">Search</button>
+          <button class="btn btn-outline-primary rounded-pill" type="button" data-bs-toggle="modal" data-bs-target="#tambah-buku">Tambah Buku</button>
         </form>
 
         <div class="col-12 col-md-8 mb-3 mt-2">
           <!-- DAFTAR BUKU -->
-          <ul class="list-group">
+          <ul class="list-buku list-group" id="list">
             <?php foreach (query("SELECT * FROM buku") as $buku) : ?>
 
-              <li class="list-group-item bg-light">
+              <li class="list-buku-item list-group-item bg-light">
                 <div class="row g-1">
                   <div class="col-md-2">
                     <img src="assets/images/<?= $buku['gambar'] ?>" class="img-fluid rounded-start" alt="...">
@@ -103,7 +105,7 @@ if (!isset($_POST["username"]) || !isset($_POST["password"]) || !isset($db_usern
                         <button class="btn btn-primary rounded-pill" type="button" data-bs-toggle="modal" data-bs-target="#buku<?= $buku['id'] ?>">Detail</button>
                         <button class="btn btn-outline-primary rounded-pill" type="button" data-bs-toggle="modal" data-bs-target="#pinjam<?= $buku['id'] ?>">Pinjam Buku</button>
                       </div>
-                      <!-- POP UP DETAIL -->
+                      <!-- SECTION POP UP DETAIL -->
                       <div class="modal fade" id="buku<?= $buku['id'] ?>" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                         <div class="modal-dialog">
                           <div class="modal-content">
@@ -134,6 +136,7 @@ if (!isset($_POST["username"]) || !isset($_POST["password"]) || !isset($db_usern
                           </div>
                         </div>
                       </div>
+                      <!-- !SECTION POP UP DETAIL -->
                       <!-- SECTION POP UP PEMINJAMAN -->
                       <div class="modal fade" data-bs-backdrop="static" tabindex="-1" id="pinjam<?= $buku['id'] ?>" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                         <div class="modal-dialog">
@@ -183,6 +186,46 @@ if (!isset($_POST["username"]) || !isset($_POST["password"]) || !isset($db_usern
             <?php endforeach; ?>
           </ul>
         </div>
+        <!-- SECTION POP UP TAMBAH BUKU -->
+        <div class="modal fade" id="tambah-buku" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h1 class="modal-title fs-5" id="exampleModalLabel">Tambah Buku</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <form action="tambah_buku.php" method="POST" enctype="multipart/form-data">
+                <div class="modal-body">
+                  <div class="mb-3">
+                    <label for="judul" class="form-label">Judul :</label>
+                    <input type="text" class="form-control" id="judul" name="judul">
+                  </div>
+                  <div class="mb-3">
+                    <label for="deskripsi" class="form-label">Deskripsi :</label>
+                    <input type="text" class="form-control" id="deskripsi" name="deskripsi">
+                  </div>
+                  <div class="mb-3">
+                    <label for="penerbit" class="form-label">Penerbit :</label>
+                    <input type="text" class="form-control" id="penerbit" name="penerbit">
+                  </div>
+                  <div class="mb-3">
+                    <label for="penulis" class="form-label">Penulis :</label>
+                    <input type="text" class="form-control" id="penulis" name="penulis">
+                  </div>
+                  <div class="mb-3">
+                    <label for="gambar" class="form-label">Gambar :</label>
+                    <input type="file" class="form-control" id="gambar" name="gambar" accept=".png,.jpg,.jpeg,.gif,.JPG,.PNG,.JPEG,.GIF">
+                  </div>
+                </div>
+                <div class="modal-footer">
+                  <button type="reset" class="btn btn-outline-danger">Cancel</button>
+                  <button type="submit" class="btn btn-outline-primary align-center">Submit</button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+        <!-- !SECTION POP UP TAMBAH BUKU -->
         <div class="col-12 col-md-4 mt-2">
           <div class="mt-0 mb-3 bg-white rounded-3 px-2">
             <blockquote class="blockquote text-center">
@@ -246,7 +289,7 @@ if (!isset($_POST["username"]) || !isset($_POST["password"]) || !isset($db_usern
             <td><?= $data["nama_pengembali"]; ?></td>
             <td><?= strtoupper($data["kelas_pengembali"]); ?></td>
             <td><a href="https://api.whatsapp.com/<?php $data["kontak_pengembali"]; ?>" class="kontak"><?= $data["kontak_pengembali"]; ?></a></td>
-            <td><?= $data["buku_pengembali"]; ?></td>
+            <td><?= $data["nama_buku"]; ?></td>
             <td><?= $data["waktu_peminjaman"]; ?></td>
             <td><?= bataswaktu(strtotime($data["waktu_peminjaman"]), 7); ?></td>
             <td><a href="kembalikan_data_pengembalian.php?id_pengembali=<?= $data['id_pengembali']; ?>" onclick="return confirm('Yakin ingin mengebalikan buku?')">Kembalikan</a></td>
@@ -301,6 +344,7 @@ if (!isset($_POST["username"]) || !isset($_POST["password"]) || !isset($db_usern
   </div>
   </div>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4" crossorigin="anonymous"></script>
+  <script src="assets/js/scriptAdmin.js"></script>
 </body>
 
 </html>
