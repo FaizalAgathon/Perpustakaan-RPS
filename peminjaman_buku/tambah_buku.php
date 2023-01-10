@@ -12,7 +12,7 @@ $namaFile = $_FILES['gambar']['name'];
 $ukuranFile = $_FILES['gambar']['size'];
 // $ext = pathinfo($namaFile, PATHINFO_EXTENSION);
 
-$rand = rand(0,9999);
+$rand = rand(1000,9999);
 $batasUkuranGambar = 3145728; // KB
 
 if ($ukuranFile < $batasUkuranGambar){		

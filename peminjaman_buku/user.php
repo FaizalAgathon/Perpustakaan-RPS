@@ -15,7 +15,7 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" 
     rel="stylesheet" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" 
     crossorigin="anonymous">
-    <link rel="stylesheet" href="assets/css2/style.css">
+    <link rel="stylesheet" href="assets/css/style.css">
   </head>
   <body>
     <ul class="nav nav-tabs my-3 border-dark" id="myTab" role="tablist">
@@ -307,7 +307,7 @@
                     <td><?= $data["nama_pengembali"]; ?></td>
                     <td><?= strtoupper($data["kelas_pengembali"]); ?></td>
                     <td><a href="https://api.whatsapp.com/<?php $data["kontak_pengembali"]; ?>" class="kontak"><?= $data["kontak_pengembali"]; ?></a></td>
-                    <td><?= $data["buku_pengembali"]; ?></td>
+                    <td><?php // $data["buku_pengembali"]; ?></td>
                     <td><?= $data["waktu_peminjaman"]; ?></td>
                     <td><?= bataswaktu(strtotime($data["waktu_peminjaman"]), 7); ?></td>
                     <td><a href="kembalikan_data_pengembalian.php?id_pengembali=<?= $data['id_pengembali']; ?>" onclick="return confirm('Yakin ingin mengebalikan buku?')">Kembalikan</a></td>

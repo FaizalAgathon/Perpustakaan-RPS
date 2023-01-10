@@ -8,17 +8,20 @@ $namaPeminjam = $_POST['nama'];
 $kelasPeminjam = $_POST['kelas'];
 $kontakPeminjam = $_POST['kontak'];
 
-$namaPeminjam = $namaPeminjam . "-" . rand(0,999);
+$namaPeminjam = $namaPeminjam . "-" . rand(100,999);
 $kelasPeminjam = strtoupper($kelasPeminjam);
-
-mysqli_query($conn,"INSERT INTO peminjam VALUES (NULL,'$namaPeminjam','$kelasPeminjam','$kontakPeminjam')");
-
-$idPeminjam = query("SELECT id FROM peminjam WHERE nama = '$namaPeminjam'")[0];
-
-$idPeminjam = $idPeminjam['id'];
 $waktuRT = date('Y-m-d');
 
-mysqli_query($conn,"INSERT INTO peminjaman VALUES (NULL,'$idPeminjam','$idBuku','$waktuRT')");
+mysqli_query($conn,"INSERT INTO pengembalian 
+  VALUES (NULL,'$namaPeminjam','$kelasPeminjam','$kontakPeminjam','$idBuku','$waktuRT')");
+
+header("Location:admin.php");
+
+// $idPeminjam = query("SELECT id FROM peminjam WHERE nama = '$namaPeminjam'")[0];
+
+// $idPeminjam = $idPeminjam['id'];
+
+// mysqli_query($conn,"INSERT INTO peminjaman VALUES (NULL,'$idPeminjam','$idBuku','$waktuRT')");
 
 // echo "
 //   <script>

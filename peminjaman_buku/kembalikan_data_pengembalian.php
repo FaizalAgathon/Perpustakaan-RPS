@@ -10,7 +10,7 @@
         $namahstr = $hstr['nama_pengembali'];
         $kelashstr = $hstr['kelas_pengembali'];
         $kontakhstr = $hstr['kontak_pengembali'];
-        $bukuhstr = $hstr['buku_pengembali'];
+        $bukuhstr = $hstr['id_buku'];
         $waktupeminjamanhstr = $hstr['waktu_peminjaman'];
         $waktupengembalianhstr = date("Y-m-j");
     }
@@ -26,14 +26,14 @@
         echo "
         <script>
         alert('Data Tidak Berhasil dihapus');
-        document.location.href = 'user.php';
+        document.location.href = 'login.php';
         </script>
         ";
     } else {
         echo"
         <script>
         alert('Terima Kasih Telah Membaca Buku');
-        document.location.href = 'user.php';
+        document.location.href = 'login.php';
         </script>
         ";
     }

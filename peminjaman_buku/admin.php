@@ -6,7 +6,8 @@ $pengembalian = query("SELECT *,buku.nama AS nama_buku
   FROM buku RIGHT JOIN pengembalian ON pengembalian.id_pengembali = buku.id");
 
 //Data Histori
-$histori = query("SELECT * FROM histori");
+$histori = query("SELECT *,buku.nama AS buku_histori 
+  FROM buku RIGHT JOIN histori ON histori.id_histori = buku.id");
 
 //Hapus Data Histori
 $hapushistori = query("SELECT * FROM histori");
@@ -57,7 +58,7 @@ if (!isset($_POST["username"]) || !isset($_POST["password"]) || !isset($db_usern
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Aplikasi Peminjaman</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
-  <link rel="stylesheet" href="assets/css2/style.css">
+  <link rel="stylesheet" href="assets/css/style.css">
 </head>
 
 <body>
@@ -97,13 +98,20 @@ if (!isset($_POST["username"]) || !isset($_POST["password"]) || !isset($db_usern
                   <div class="col-md-6">
                     <div class="card-body">
                       <h5 class="card-title "><?= $buku['nama'] ?></h5>
-                      <a href="" class="button text-decoration-none">#Action</a>
-                      <a href="" class="button text-decoration-none">#Comedy</a>
-                      <a href="" class="button text-decoration-none">#Fantasy</a>
+                      <span class="fw-light text-primary">
+
+                      <?php 
+                      $bukuGenre = explode(',',$buku['genre']);
+                      echo implode(' ',$bukuGenre);
+                      ?>
+
+                      </span>
                       <p class="fw-light fs-6 mb-0"><?= $buku['deskripsi'] ?></p>
                       <div class="d-grid gap-2 px-2 pt-2">
                         <button class="btn btn-primary rounded-pill" type="button" data-bs-toggle="modal" data-bs-target="#buku<?= $buku['id'] ?>">Detail</button>
                         <button class="btn btn-outline-primary rounded-pill" type="button" data-bs-toggle="modal" data-bs-target="#pinjam<?= $buku['id'] ?>">Pinjam Buku</button>
+                        <button class="btn btn-outline-primary rounded-pill" type="button" data-bs-toggle="modal" data-bs-target="#edit<?= $buku['id'] ?>">Edit Buku</button>
+                        <a href="hapusBuku.php?id=<?=$buku['id']?>" class="btn btn-danger rounded-pill">Hapus Buku</a>
                       </div>
                       <!-- SECTION POP UP DETAIL -->
                       <div class="modal fade" id="buku<?= $buku['id'] ?>" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -178,6 +186,46 @@ if (!isset($_POST["username"]) || !isset($_POST["password"]) || !isset($db_usern
                         </div>
                       </div>
                       <!-- !SECTION POP UP PEMINJAMAN -->
+                      <!-- SECTION POP UP EDIT -->
+                      <div class="modal fade" data-bs-backdrop="static" tabindex="-1" id="edit<?= $buku['id'] ?>" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                        <div class="modal-dialog">
+                          <div class="modal-content">
+                            <div class="modal-header">
+                              <h1 class="modal-title fs-5" id="exampleModalLabel">Edit Buku <?= $buku['nama'] ?> </h1>
+                              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                              <form action="editBuku.php" method="POST" enctype="multipart/form-data">
+                                <div class="mb-3">
+                                  <label for="Judul" class="form-label">Judul :</label>
+                                  <input type="text" class="form-control" id="Judul" name="judul" value="<?=$buku['nama']?>">
+                                </div>
+                                <div class="mb-3">
+                                  <label for="penulis" class="form-label">Penulis :</label>
+                                  <input type="text" class="form-control" id="penulis" name="penulis" value="<?=$buku['penulis']?>">
+                                </div>
+                                <div class="mb-3">
+                                  <label for="penerbit" class="form-label">Penerbit :</label>
+                                  <input type="text" class="form-control" id="penerbit" name="penerbit" value="<?=$buku['penerbit']?>">
+                                </div>
+                                <div class="mb-3">
+                                  <label for="deskripsi" class="form-label">Deskripsi :</label>
+                                  <input type="text" class="form-control" id="deskripsi" name="deskripsi" value="<?=$buku['deskripsi']?>">
+                                </div>
+                                <div class="mb-3">
+                                  <label for="gambar" class="form-label">Gambar :</label>
+                                  <img src="assets/images/<?=$buku['gambar']?>" alt="..." width="100%">
+                                  <input type="file" class="form-control" id="gambar" name="gambar" accept=".png,.jpg,.jpeg,.gif,.JPG,.PNG,.JPEG,.GIF">
+                                </div>
+                                <input type="hidden" name="idBuku" value="<?= $buku['id'] ?>">
+                                <button type="reset" class="btn btn-outline-danger">Cancel</button>
+                                <button type="submit" class="btn btn-outline-primary align-center">Submit</button>
+                              </form>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <!-- !SECTION POP UP EDIT -->
                     </div>
                   </div>
                 </div>
@@ -239,27 +287,32 @@ if (!isset($_POST["username"]) || !isset($_POST["password"]) || !isset($db_usern
             <li class="d-flex justify-content-center p-1 bg-white align-items-start rounded-top">
               <h2 class="">Top Buku</h2>
             </li>
+
+            <?php 
+            
+            $bukuTop = query("SELECT * FROM buku ORDER BY jumlah_dipinjam DESC");
+            
+            foreach ($bukuTop as $bT ) :
+            ?>
+
             <li class="list-group-item d-flex justify-content-between align-items-start">
-              <div class="ms-2 me-auto">
-                <div class="fw-bold">Tensei Shitara Slime Datta Ken Vol.19</div>
-                Content for list item
+              <div class="ms-2 me-auto d-flex">
+                <img src="assets/images/<?=$bT['gambar']?>" alt="..." width="70" class="float-start">
+                <div class="fw-bold">
+                  <p><?=$bT['nama']?></p>
+                  <span>
+                  <?php 
+                  $bukuGenre = explode(',',$bT['genre']);
+                  echo implode(' ',$bukuGenre); 
+                  ?>
+                  </span>
+                </div>
               </div>
-              <span class="badge bg-warning rounded-pill">30</span>
+              <span class="badge bg-warning rounded-pill"><?=$bT['jumlah_dipinjam']?></span>
             </li>
-            <li class="list-group-item d-flex justify-content-between align-items-start">
-              <div class="ms-2 me-auto">
-                <div class="fw-bold">Tensei Shitara Slime Datta Ken Vol.20</div>
-                Content for list item
-              </div>
-              <span class="badge bg-warning rounded-pill">25</span>
-            </li>
-            <li class="list-group-item d-flex justify-content-between align-items-start">
-              <div class="ms-2 me-auto">
-                <div class="fw-bold">Tensei Shitara Slime Datta Ken Vol.17</div>
-                Content for list item
-              </div>
-              <span class="badge bg-warning rounded-pill">23</span>
-            </li>
+            
+            <?php endforeach; ?>
+
           </ol>
         </div>
       </div>

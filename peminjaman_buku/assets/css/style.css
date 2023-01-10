@@ -1,0 +1,37 @@
+body{
+    /* background: url(../../background/bg4.jpg); */
+    background-size:cover;
+    background-attachment: fixed;
+    background: linear-gradient(
+        120deg,#3366ff,
+        #00ffff
+    );
+}
+.menu1{
+    width: 40% !important;
+}
+.menu2{
+    width: 40% !important;
+}
+.menu3{
+    position: absolute;
+    width: 6rem !important;
+    z-index: 999; 
+}
+.menu31{
+    width: 19% !important;
+}
+.menu32{
+    z-index: 999;
+}
+.pop{
+    backdrop-filter: blur(4px);
+}
+.judul{
+    border-bottom: 3px solid white;
+    width: max-content;
+}
+
+/* .list-buku-item{
+
+} */
