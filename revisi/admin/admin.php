@@ -63,160 +63,251 @@ if ( isset($_POST['tambahBuku']) ){
 </head>
 
 <body>
-  <!-- HEADER -->
-  <nav class="navbar bg-primary judul">
-    <div class="container">
-      <a class="navbar-brand fw-bold fs-4 ms-4" href="#">
-        <img src="../../peminjaman_buku/assets/images/SMKN 1 Cirebon.png" alt="Bootstrap" width="70" height="70">
-        Peminjamaan Buku
-      </a>
-      <div class="d-flex">
-        <button class="border-0 bg-white fw-bold rounded-pill" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight">
-          <img src="../icon/profile.png" width="40rem" alt="" class="bg-light rounded-circle p-0 py-1 pe-1">Profile
-        </button>
 
-        <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasRight" aria-labelledby="offcanvasRightLabel">
-          <div class="offcanvas-header">
-            <h5 class="offcanvas-title" id="offcanvasRightLabel">Admin</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-          </div>
-          <div class="offcanvas-body">
-            <img src="../icon/profile.png" width="100rem" alt="" class="mb-3">
-            <p>Muhammad Azis Nurfajari</p>
-            <p>XI RPL 2</p>
-            <p>0858-6280-0579</p>
-            <div class="footer">
-              <button class="border-0 bg-white fw-bold">
-              <a href="../login-daftar/logout.php"><img src="../icon/logout.png" width="30rem" alt="">Logout</a>
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </nav>
-  <!-- AKHIR HEADER -->
-  <!-- MENU -->
-  <div class="container">
-    <ul class="nav justify-content-center mt-3 border rounded-pill bg-white" style="box-shadow: 5px 5px 5px #c5c5c5;">
-      <li class="nav-item">
-        <a class="nav-link active text-dark text-decoration-underline" aria-current="page" href="admin.php">
-          <img src="../icon/book1.png" width="35rem" alt="" class="ms-4"><br>
-          Daftar Buku
-        </a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href="peminjam.php">
-          <img src="../icon/reader.png" width="35rem" alt="" class="ms-3"><br>
-          Peminjam
-        </a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href="tambahbuku.php">
-          <img src="../icon/book2.png" width="35rem" alt="" class="ms-4"><br>
-          Tambah Buku
-        </a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href="feedback.php">
-          <img src="../icon/chat.png" width="35rem" alt="" class="ms-3"><br>
-          Feedback
-        </a>
-      </li>
-    </ul>
-  </div>
-  <!-- AKHIR MENU -->
+  <?php include 'header-menu-admin.php'; ?>
+
   <!-- BAGIAN KIRI & DAFTAR BUKU -->
   <div class="row m-auto">
     <div class="col-12 col-md-8 mb-3 mt-4">
+      <?php 
 
-      <?php foreach (query("SELECT * FROM buku") as $buku) : ?>
-        <ul class="list-buku list-group" id="list">
+      $jmlDataperHal = 5;
+      $jmlData = count(query("SELECT * FROM buku"));
+      $jmlHal = ceil($jmlData / $jmlDataperHal);
+      $halAktif = ( isset($_GET['hal']) ) ? $_GET['hal'] : 1;
+      $awalData = ( $jmlDataperHal * $halAktif ) - $jmlDataperHal;
+      
+      ?>
+      <?php if ( !isset($_POST['inputCari']) AND !isset($_GET['halCari']) ) : ?>
+        <?php foreach (query("SELECT * FROM buku LIMIT $awalData, $jmlDataperHal") as $buku) : ?>
+          <ul class="list-buku list-group" id="list">
 
-          <li class="list-buku-item list-group-item bg-white rounded rounded-4 border" style="box-shadow: 5px 5px 5px rgb(120, 120, 120);">
-            <div class="row g-1">
-              <div class="col-md-3">
-                <img src="../assets/images/<?= $buku['gambar'] ?>" class="img-fluid border rounded rounded-3" width="140rem" alt="...">
-              </div>
-              <div class="col-md-6 w-75">
-                <div class="card-body p-1">
-                  <h5 class="card-title "><?= $buku['nama'] ?></h5>
-                  <p class="fw-light fs-6 mb-0"><?= $buku['deskripsi'] ?></p>
-                  <div class="d-grid gap-2 px-2 pt-2">
-                    <div class="row gap-2">
-                      <button class="col btn btn-warning btn-sm rounded-pill text-white p-0" type="button" data-bs-toggle="modal" data-bs-target="#edit<?= $buku['id'] ?>">
-                        <img src="../icon/edit1.png" width="20px" alt="">
-                      </button>
-                      <a href="hapusBuku.php?id=<?= $buku['id'] ?>" class="col btn btn-danger btn-sm rounded-pill">
-                        <img src="../icon/bin.png" width="20px" alt="">
-                      </a>
+            <li class="list-buku-item list-group-item bg-white rounded rounded-4 border" style="box-shadow: 5px 5px 5px rgb(120, 120, 120);">
+              <div class="row g-1">
+                <div class="col-md-3">
+                  <img src="../assets/images/<?= $buku['gambar'] ?>" class="img-fluid border rounded rounded-3" width="140rem" alt="...">
+                </div>
+                <div class="col-md-6 w-75">
+                  <div class="card-body p-1">
+                    <h5 class="card-title "><?= $buku['nama'] ?></h5>
+                    <p class="fw-light fs-6 mb-0"><?= $buku['deskripsi'] ?></p>
+                    <div class="d-grid gap-2 px-2 pt-2">
+                      <div class="row gap-2">
+                        <button class="col btn btn-warning btn-sm rounded-pill text-white p-0" type="button" data-bs-toggle="modal" data-bs-target="#edit<?= $buku['id'] ?>">
+                          <img src="../icon/edit1.png" width="20px" alt="">
+                        </button>
+                        <a href="hapusBuku.php?id=<?= $buku['id'] ?>" class="col btn btn-danger btn-sm rounded-pill">
+                          <img src="../icon/bin.png" width="20px" alt="">
+                        </a>
+                      </div>
                     </div>
-                  </div>
-                  <!-- SECTION AWAL POP UP EDIT -->
-                  <div class="modal fade" data-bs-backdrop="static" tabindex="-1" id="edit<?= $buku['id'] ?>" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                    <div class="modal-dialog modal-dialog-scrollable">
-                      <div class="modal-content">
-                        <div class="modal-header border-0 text-white" style="background: linear-gradient(120deg,#4433ff,#00ffff);">
-                          <h1 class="modal-title fs-5" id="exampleModalLabel">Edit Buku</h1>
-                          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                        </div>
-                        <div class="modal-body">
-                          <form action="editBuku.php" method="POST" enctype="multipart/form-data">
-                            <div class="mb-3">
-                              <label for="gambar" class="form-label">Gambar :</label><br>
-                              <img src="../assets/images/<?= $buku['gambar'] ?>" class="w-25 mb-2" alt="..." width="100%">
-                              <input type="file" class="form-control form-control-sm w-50" id="gambar" name="gambar" accept=".png,.jpg,.jpeg,.gif,.JPG,.PNG,.JPEG,.GIF">
-                            </div>
-                            <div class="mb-3">
-                              <label for="Judul" class="form-label">Judul :</label>
-                              <input type="text" class="form-control border-bottom border-0 rounded-0" id="Judul" name="judul" value="<?= $buku['nama'] ?>">
-                            </div>
-                            <div class="mb-3">
-                              <label for="penulis" class="form-label">Penulis :</label>
-                              <input type="text" class="form-control border-bottom border-0 rounded-0" id="penulis" name="penulis" value="<?= $buku['penulis'] ?>">
-                            </div>
-                            <div class="mb-3">
-                              <label for="penerbit" class="form-label">Penerbit :</label>
-                              <input type="text" class="form-control border-bottom border-0 rounded-0" id="penerbit" name="penerbit" value="<?= $buku['penerbit'] ?>">
-                            </div>
-                            <div class="mb-3">
-                              <label for="deskripsi" class="form-label">Deskripsi :</label>
-                              <input type="text" class="form-control border-bottom border-0 rounded-0" id="deskripsi" name="deskripsi" value="<?= $buku['deskripsi'] ?>">
-                            </div>
-                            <div class="mb-3">
-                              <label for="jumlah" class="form-label">Jumlah Buku :</label>
-                              <input type="text" class="form-control border-1 rounded-3 w-25" id="jumlah" name="jumlah" value="<?= $buku['jumlah'] ?>">
-                            </div>
-                            <input type="hidden" name="idBuku" value="<?= $buku['id'] ?>">
-                            <div class="input-group">
-                              <button type="reset" class="btn btn-outline-danger py-1 px-4 pt-0 w-50">
-                                <img src="../icon/multiply.png" width="20rem" alt="">
-                                Cancel
-                              </button>
-                              <button type="submit" class="btn btn-outline-primary py-1 px-4 pt-0 w-50">
-                                <img src="../icon/bookmark.png" width="20rem" alt="">
-                                save
-                              </button>
-                            </div>
-                          </form>
+                    <!-- SECTION AWAL POP UP EDIT -->
+                    <div class="modal fade" data-bs-backdrop="static" tabindex="-1" id="edit<?= $buku['id'] ?>" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                      <div class="modal-dialog modal-dialog-scrollable">
+                        <div class="modal-content">
+                          <div class="modal-header border-0 text-white" style="background: linear-gradient(120deg,#4433ff,#00ffff);">
+                            <h1 class="modal-title fs-5" id="exampleModalLabel">Edit Buku</h1>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                          </div>
+                          <div class="modal-body">
+                            <form action="editBuku.php" method="POST" enctype="multipart/form-data">
+                              <div class="mb-3">
+                                <label for="gambar" class="form-label">Gambar :</label><br>
+                                <img src="../assets/images/<?= $buku['gambar'] ?>" class="w-25 mb-2" alt="..." width="100%">
+                                <input type="file" class="form-control form-control-sm w-50" id="gambar" name="gambar" accept=".png,.jpg,.jpeg,.gif,.JPG,.PNG,.JPEG,.GIF">
+                              </div>
+                              <div class="mb-3">
+                                <label for="Judul" class="form-label">Judul :</label>
+                                <input type="text" class="form-control border-bottom border-0 rounded-0" id="Judul" name="judul" value="<?= $buku['nama'] ?>">
+                              </div>
+                              <div class="mb-3">
+                                <label for="penulis" class="form-label">Penulis :</label>
+                                <input type="text" class="form-control border-bottom border-0 rounded-0" id="penulis" name="penulis" value="<?= $buku['penulis'] ?>">
+                              </div>
+                              <div class="mb-3">
+                                <label for="penerbit" class="form-label">Penerbit :</label>
+                                <input type="text" class="form-control border-bottom border-0 rounded-0" id="penerbit" name="penerbit" value="<?= $buku['penerbit'] ?>">
+                              </div>
+                              <div class="mb-3">
+                                <label for="deskripsi" class="form-label">Deskripsi :</label>
+                                <input type="text" class="form-control border-bottom border-0 rounded-0" id="deskripsi" name="deskripsi" value="<?= $buku['deskripsi'] ?>">
+                              </div>
+                              <div class="mb-3">
+                                <label for="jumlah" class="form-label">Jumlah Buku :</label>
+                                <input type="text" class="form-control border-1 rounded-3 w-25" id="jumlah" name="jumlah" value="<?= $buku['jumlah'] ?>">
+                              </div>
+                              <input type="hidden" name="idBuku" value="<?= $buku['id'] ?>">
+                              <div class="input-group">
+                                <button type="reset" class="btn btn-outline-danger py-1 px-4 pt-0 w-50">
+                                  <img src="../icon/multiply.png" width="20rem" alt="">
+                                  Cancel
+                                </button>
+                                <button type="submit" class="btn btn-outline-primary py-1 px-4 pt-0 w-50">
+                                  <img src="../icon/bookmark.png" width="20rem" alt="">
+                                  save
+                                </button>
+                              </div>
+                            </form>
+                          </div>
                         </div>
                       </div>
                     </div>
+                    <!-- !SECTION AKHIR POP UP EDIT -->
                   </div>
-                  <!-- !SECTION AKHIR POP UP EDIT -->
                 </div>
               </div>
-            </div>
-          </li>
+            </li>
 
-        </ul>
-      <?php endforeach; ?>
+          </ul>
+        <?php endforeach; ?>
+        <nav aria-label="Page navigation example">
+          <ul class="pagination">
+
+            <?php if ( $halAktif > 1 ) : ?>
+            <li class="page-item">
+              <a class="page-link" href="?hal=<?= $halAktif - 1 ?>" aria-label="Previous">
+                <span aria-hidden="true">&laquo;</span>
+              </a>
+            </li>
+            <?php endif; ?>
+
+            <?php for ( $i = 1; $i <= $jmlHal; $i++ ) : ?>
+            <li class="page-item <?= $i == $halAktif ? 'active' : '' ?>">
+              <a class="page-link" href="?hal=<?= $i ?>">
+                <?= $i ?>
+              </a>
+            </li>
+            <?php endfor; ?>
+
+            <?php if ( $halAktif < $jmlHal ) : ?>
+            <li class="page-item">
+              <a class="page-link" href="?hal=<?= $halAktif + 1 ?>" aria-label="Next">
+                <span aria-hidden="true">&raquo;</span>
+              </a>
+            </li>
+            <?php endif; ?>
+
+          </ul>
+        </nav>
+      <?php endif; ?>
+      <?php if ( isset($_POST['inputCari']) OR isset($_GET['halCari']) ) : ?>
+        <?php 
+        $keyword = $_POST['inputCari'];
+        $jmlDataCari = count(query("SELECT * FROM buku WHERE nama LIKE '%$keyword%'"));
+        $jmlHalCari = ceil($jmlDataCari / $jmlDataperHal);
+        foreach ( query("SELECT * FROM buku WHERE nama LIKE '%$keyword%' LIMIT $awalData, $jmlDataperHal") as $cariBuku ) : ?>
+          <ul class="list-buku list-group" id="list">
+            <li class="list-buku-item list-group-item bg-white rounded rounded-4 border" style="box-shadow: 5px 5px 5px rgb(120, 120, 120);">
+              <div class="row g-1">
+                <div class="col-md-3">
+                  <img src="../assets/images/<?= $cariBuku['gambar'] ?>" class="img-fluid border rounded rounded-3" width="140rem" alt="...">
+                </div>
+                <div class="col-md-6 w-75">
+                  <div class="card-body p-1">
+                    <h5 class="card-title "><?= $cariBuku['nama'] ?></h5>
+                    <p class="fw-light fs-6 mb-0"><?= $cariBuku['deskripsi'] ?></p>
+                    <div class="d-grid gap-2 px-2 pt-2">
+                      <div class="row gap-2">
+                        <button class="col btn btn-warning btn-sm rounded-pill text-white p-0" type="button" data-bs-toggle="modal" data-bs-target="#edit<?= $cariBuku['id'] ?>">
+                          <img src="../icon/edit1.png" width="20px" alt="">
+                        </button>
+                        <a href="hapusBuku.php?id=<?= $cariBuku['id'] ?>" class="col btn btn-danger btn-sm rounded-pill">
+                          <img src="../icon/bin.png" width="20px" alt="">
+                        </a>
+                      </div>
+                    </div>
+                    <!-- SECTION AWAL POP UP EDIT -->
+                    <div class="modal fade" data-bs-backdrop="static" tabindex="-1" id="edit<?= $cariBuku['id'] ?>" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                      <div class="modal-dialog modal-dialog-scrollable">
+                        <div class="modal-content">
+                          <div class="modal-header border-0 text-white" style="background: linear-gradient(120deg,#4433ff,#00ffff);">
+                            <h1 class="modal-title fs-5" id="exampleModalLabel">Edit Buku</h1>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                          </div>
+                          <div class="modal-body">
+                            <form action="editBuku.php" method="POST" enctype="multipart/form-data">
+                              <div class="mb-3">
+                                <label for="gambar" class="form-label">Gambar :</label><br>
+                                <img src="../assets/images/<?= $cariBuku['gambar'] ?>" class="w-25 mb-2" alt="..." width="100%">
+                                <input type="file" class="form-control form-control-sm w-50" id="gambar" name="gambar" accept=".png,.jpg,.jpeg,.gif,.JPG,.PNG,.JPEG,.GIF">
+                              </div>
+                              <div class="mb-3">
+                                <label for="Judul" class="form-label">Judul :</label>
+                                <input type="text" class="form-control border-bottom border-0 rounded-0" id="Judul" name="judul" value="<?= $cariBuku['nama'] ?>">
+                              </div>
+                              <div class="mb-3">
+                                <label for="penulis" class="form-label">Penulis :</label>
+                                <input type="text" class="form-control border-bottom border-0 rounded-0" id="penulis" name="penulis" value="<?= $cariBuku['penulis'] ?>">
+                              </div>
+                              <div class="mb-3">
+                                <label for="penerbit" class="form-label">Penerbit :</label>
+                                <input type="text" class="form-control border-bottom border-0 rounded-0" id="penerbit" name="penerbit" value="<?= $cariBuku['penerbit'] ?>">
+                              </div>
+                              <div class="mb-3">
+                                <label for="deskripsi" class="form-label">Deskripsi :</label>
+                                <input type="text" class="form-control border-bottom border-0 rounded-0" id="deskripsi" name="deskripsi" value="<?= $cariBuku['deskripsi'] ?>">
+                              </div>
+                              <div class="mb-3">
+                                <label for="jumlah" class="form-label">Jumlah Buku :</label>
+                                <input type="text" class="form-control border-1 rounded-3 w-25" id="jumlah" name="jumlah" value="<?= $cariBuku['jumlah'] ?>">
+                              </div>
+                              <input type="hidden" name="idBuku" value="<?= $cariBuku['id'] ?>">
+                              <div class="input-group">
+                                <button type="reset" class="btn btn-outline-danger py-1 px-4 pt-0 w-50">
+                                  <img src="../icon/multiply.png" width="20rem" alt="">
+                                  Cancel
+                                </button>
+                                <button type="submit" class="btn btn-outline-primary py-1 px-4 pt-0 w-50">
+                                  <img src="../icon/bookmark.png" width="20rem" alt="">
+                                  save
+                                </button>
+                              </div>
+                            </form>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <!-- !SECTION AKHIR POP UP EDIT -->
+                  </div>
+                </div>
+              </div>
+            </li>
+          </ul>
+        <?php endforeach; ?>
+        <nav aria-label="Page navigation example">
+          <ul class="pagination">
+            <?php if ( $halAktif > 1 ) : ?>
+            <li class="page-item">
+              <a class="page-link" href="?halCari=<?= $halAktif - 1 ?>" aria-label="Previous">
+                <span aria-hidden="true">&laquo;</span>
+              </a>
+            </li>
+            <?php endif; ?>
+            <?php for ( $i = 1; $i <= $jmlHalCari; $i++ ) : ?>
+            <li class="page-item">
+              <a class="page-link" href="?halCari=<?= $i ?>">
+                <?= $i ?>
+              </a>
+            </li>
+            <?php endfor; ?>
+            <?php if ( $halAktif < $jmlHalCari ) : ?>
+            <li class="page-item">
+              <a class="page-link" href="?halCari=<?= $halAktif + 1 ?>" aria-label="Next">
+                <span aria-hidden="true">&raquo;</span>
+              </a>
+            </li>
+            <?php endif; ?>
+          </ul>
+        </nav>
+      <?php endif; ?>
     </div>
     <!-- AKHIR BAGIAN KIRI & DAFTAR BUKU -->
     <!-- BAGIAN KANAN -->
     <div class="col-12 col-md-4 mt-4">
-      <form class="input-group mb-2" role="search">
-        <input class="form-control border-primary mt-2 rounded-pill" type="search" placeholder="Search" aria-label="Search" id="inputCari">
+
+      <form action="" method="POST" class="input-group mb-2" role="search">
+        <input class="form-control border-primary mt-2 rounded-pill" type="search" placeholder="Search" aria-label="Search" name="inputCari">
+
         <!-- <button class="btn btn-primary mt-2 rounded-start rounded-pill">Cari</button> -->
       </form>
       <div class="mt-0 mb-3 bg-white rounded-3 px-2">

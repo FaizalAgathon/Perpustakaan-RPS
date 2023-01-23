@@ -1,3 +1,4 @@
+
 <?php 
 
 require '../koneksi.php';
@@ -34,6 +35,7 @@ $awalData = ($dataPerhalaman * $halamanAktif) - $dataPerhalaman;
 
 ?>
 
+
 <!doctype html>
 <html lang="en">
   <head>
@@ -45,69 +47,9 @@ $awalData = ($dataPerhalaman * $halamanAktif) - $dataPerhalaman;
     <link rel="stylesheet" href="../css/feedback.css">
   </head>
   <body>
-    <!-- HEADER -->
-    <nav class="navbar bg-white judul">
-        <div class="container">
-            <a class="navbar-brand fw-bold fs-4 ms-4" href="#">
-                <img src="../../../peminjaman_buku/assets/images/SMKN 1 Cirebon.png" alt="Bootstrap" width="70" height="70">
-                Peminjamaan Buku
-            </a>
-            <div class="d-flex">
-                <button class="border-0 bg-white fw-bold rounded-pill" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight">
-                    <img src="../icon/profile.png" width="40rem" alt="" class="bg-light rounded-pill p-0 py-1 pe-1">Profile
-                </button>
 
-                <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasRight" aria-labelledby="offcanvasRightLabel">
-                    <div class="offcanvas-header">
-                        <h5 class="offcanvas-title" id="offcanvasRightLabel">Admin</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-                    </div>
-                    <div class="offcanvas-body">
-                        <img src="../icon/profile.png" width="100rem" alt="" class="mb-3">
-                        <p>Muhammad Azis Nurfajari</p>
-                        <p>XI RPL 2</p>
-                        <p>0858-6280-0579</p>
-                        <div class="footer">
-                            <button class="border-0 bg-white fw-bold">
-                                <a href="../login-daftar/logout.php"><img src="../icon/logout.png" width="30rem" alt="">Logout</a>
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </nav>
-    <!-- AKHIR HEADER -->
-    <!-- AWAL MENU -->
-    <div class="container">
-        <ul class="nav justify-content-center mt-3 border rounded-pill bg-white" style="box-shadow: 5px 5px 5px #c5c5c5;">
-            <li class="nav-item">
-                <a class="nav-link active" aria-current="page" href="admin.php">
-                    <img src="../icon/book1.png" width="35rem" alt="" class="ms-4"><br>
-                    Daftar Buku
-                </a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="peminjam.php">
-                    <img src="../icon/reader.png" width="35rem" alt="" class="ms-3"><br>
-                    Peminjam
-                </a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="tambahbuku.php">
-                    <img src="../icon/book2.png" width="35rem" alt="" class="ms-4"><br>
-                    Tambah Buku
-                </a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link text-dark text-decoration-underline" href="feedback.php">
-                    <img src="../icon/chat.png" width="35rem" alt="" class="ms-3"><br>
-                    Feedback
-                </a>
-            </li>
-        </ul>
-    </div>
-    <!-- AKHIR MENU -->
+    <?php include 'header-menu-admin.php'; ?>
+
     <!-- AWAL FEEDBACK -->
     <div class="container mt-4">
         <br>

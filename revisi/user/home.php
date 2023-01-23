@@ -2,6 +2,7 @@
 
 require '../koneksi.php';
 
+
 if (!isset($_POST['login'])) {
   header("Location: ../login-daftar/login_siswa.php");
 } elseif ($_SESSION['user'] == true) {
@@ -34,6 +35,7 @@ $daftarSiswa = query("SELECT * FROM siswa s INNER JOIN
     kontakSiswa = '$kontak'")[0];
 
 
+
 ?>
 
 <!doctype html>
@@ -54,144 +56,327 @@ $daftarSiswa = query("SELECT * FROM siswa s INNER JOIN
   <!-- BAGIAN KIRI & DAFTAR BUKU-->
   <div class="row m-auto">
     <div class="col-12 col-md-8 mb-3 mt-4">
-      <?php foreach( query("SELECT * FROM buku") as $buku ) : ?>
-      <ul class="list-buku list-group" id="list">
-        <li class="list-buku-item list-group-item bg-white rounded rounded-4 border" style="box-shadow: 5px 5px 5px rgb(120, 120, 120);">
-          <div class="row g-1">
-            <div class="col-md-3">
-              <img src="../assets/images/<?= $buku['gambar'] ?>" class="img-fluid border rounded rounded-3" width="140rem" alt="...">
-            </div>
-            <div class="col-md-6 w-75">
-              <div class="card-body p-1">
-                <h5 class="card-title "><?= $buku['nama'] ?></h5>
-                <p class="fw-light fs-6 mb-0"><?= $buku['deskripsi'] ?></p>
-                <div class="d-grid gap-2 px-2 pt-2">
-                  <div class="row gap-2">
-                    <button class="col btn btn-white border btn-sm rounded-pill text-dark fw-semibold p-0" type="button" data-bs-toggle="modal" 
-                    data-bs-target="#detail<?= $buku['id'] ?>" style="box-shadow: 5px 5px 5px rgb(201, 201, 201)">
-                      <img src="../icon/information2.png" width="20rem" alt=""><br>
-                      Detail
-                    </button>
-                    <button class="col btn btn-white border btn-sm rounded-pill text-dark fw-semibold p-0" type="button" data-bs-toggle="modal" data-bs-target="#pinjam<?= $buku['id'] ?>" style="box-shadow: 5px 5px 5px rgb(201, 201, 201)">
-                      <img src="../icon/clipboard.png" width="20rem" alt=""><br>
-                      Pinjam
-                    </button>
-                  </div>
-                </div>
-                <!-- AWAL POP UP DETAIL -->
-                <div class="modal fade" id="detail<?= $buku['id'] ?>" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                  <div class="modal-dialog">
-                    <div class="modal-content">
-                      <div class="modal-header border-0 text-white" style="background: linear-gradient(120deg,#4433ff,#00ffff);">
-                        <h1 class="modal-title fs-5" id="exampleModalLabel">Detail</h1>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                      </div>
-                      <div class="modal-body">
-                        <div class="row g-2">
-                          <div class="col-md-4">
-                            <img src="../assets/images/<?= $buku['gambar'] ?>" class="img-fluid rounded-start" alt="...">
-                          </div>
-                          <div class="col-md-8">
-                            <div class="card-body">
-                              <h5>Judul : <?= $buku['nama'] ?></h5>
 
-                              <h6>Penulis : <?= $buku['penulis'] ?></h6>
-                              <h6>Penerbit : <?= $buku['penerbit'] ?></h6>
-                              <h6>Tanggal terbit : <?= $buku['tglTerbit'] ?></h6>
-                              <h6>Tersedia : <?= $buku['jumlah'] ?> Buku</h6>
+    <?php 
+
+    $jmlDataperHal = 5;
+    $jmlData = count(query("SELECT * FROM buku"));
+    $jmlHal = ceil($jmlData / $jmlDataperHal);
+    $halAktif = ( isset($_GET['hal']) ) ? $_GET['hal'] : 1;
+    $awalData = ( $jmlDataperHal * $halAktif ) - $jmlDataperHal;
+    
+    ?>
+
+      <?php if ( !isset($_POST['inputCari']) ) : ?>
+        <?php foreach( query("SELECT * FROM buku LIMIT $awalData, $jmlDataperHal") as $buku ) : ?>
+          <ul class="list-buku list-group" id="list">
+            <li class="list-buku-item list-group-item bg-white rounded rounded-4 border" style="box-shadow: 5px 5px 5px rgb(120, 120, 120);">
+              <div class="row g-1">
+                <div class="col-md-3">
+                  <img src="../assets/images/<?= $buku['gambar'] ?>" class="img-fluid border rounded rounded-3" width="140rem" alt="...">
+                </div>
+                <div class="col-md-6 w-75">
+                  <div class="card-body p-1">
+                    <h5 class="card-title "><?= $buku['nama'] ?></h5>
+                    <p class="fw-light fs-6 mb-0"><?= $buku['deskripsi'] ?></p>
+                    <div class="d-grid gap-2 px-2 pt-2">
+                      <div class="row gap-2">
+                        <button class="col btn btn-white border btn-sm rounded-pill text-dark fw-semibold p-0" type="button" data-bs-toggle="modal" 
+                        data-bs-target="#detail<?= $buku['id'] ?>" style="box-shadow: 5px 5px 5px rgb(201, 201, 201)">
+                          <img src="../icon/information2.png" width="20rem" alt=""><br>
+                          Detail
+                        </button>
+                        <button class="col btn btn-white border btn-sm rounded-pill text-dark fw-semibold p-0" type="button" data-bs-toggle="modal" data-bs-target="#pinjam<?= $buku['id'] ?>" style="box-shadow: 5px 5px 5px rgb(201, 201, 201)">
+                          <img src="../icon/clipboard.png" width="20rem" alt=""><br>
+                          Pinjam
+                        </button>
+                      </div>
+                    </div>
+                    <!-- AWAL POP UP DETAIL -->
+                    <div class="modal fade" id="detail<?= $buku['id'] ?>" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                      <div class="modal-dialog">
+                        <div class="modal-content">
+                          <div class="modal-header border-0 text-white" style="background: linear-gradient(120deg,#4433ff,#00ffff);">
+                            <h1 class="modal-title fs-5" id="exampleModalLabel">Detail</h1>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                          </div>
+                          <div class="modal-body">
+                            <div class="row g-2">
+                              <div class="col-md-4">
+                                <img src="../assets/images/<?= $buku['gambar'] ?>" class="img-fluid rounded-start" alt="...">
+                              </div>
+                              <div class="col-md-8">
+                                <div class="card-body">
+                                  <h5>Judul : <?= $buku['nama'] ?></h5>
+
+                                  <h6>Penulis : <?= $buku['penulis'] ?></h6>
+                                  <h6>Penerbit : <?= $buku['penerbit'] ?></h6>
+                                  <h6>Tanggal terbit : <?= $buku['tglTerbit'] ?></h6>
+                                  <h6>Tersedia : <?= $buku['jumlah'] ?> Buku</h6>
+                                </div>
+                              </div>
+                              <hr>
+                              <h6 class="fw-bold">Deskripsi : <?= $buku['deskripsi'] ?></h6>
+                              <p></p>
                             </div>
                           </div>
-                          <hr>
-                          <h6 class="fw-bold">Deskripsi : <?= $buku['deskripsi'] ?></h6>
-                          <p></p>
                         </div>
                       </div>
                     </div>
-                  </div>
-                </div>
-                <!-- AKHIR POP UP DETAIL -->
-                <!-- AWAL POP UP PEMINJAMAN -->
-                <div class="modal fade" data-bs-backdrop="static" tabindex="-1" id="pinjam<?= $buku['id'] ?>" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                  <div class="modal-dialog">
-                    <div class="modal-content">
-                      <div class="modal-header border-0" style="background: linear-gradient(120deg,#4433ff,#00ffff);">
-                        <h1 class="modal-title fs-5 text-white" id="exampleModalLabel">Konfirmasi Peminjaman Buku</h1>
-                        <button type="button" class="btn-close rounded-circle" data-bs-dismiss="modal" aria-label="Close"></button>
-                      </div>
-                      <div class="modal-body">
-                        <form action="peminjam.php" method="POST">
-                          <div class="mb-3">
-                            <p for="nama" class="form-label">
-                              Buku :
-                              <span id="nama"><?= $buku['nama'] ?></span>
-                            </p>
-                            <input type="hidden" name="idBuku" value="<?= $buku['id'] ?>">
-                            <input type="hidden" name="nama" 
-                            value="">
+                    <!-- AKHIR POP UP DETAIL -->
+                    <!-- AWAL POP UP PEMINJAMAN -->
+                    <div class="modal fade" data-bs-backdrop="static" tabindex="-1" id="pinjam<?= $buku['id'] ?>" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                      <div class="modal-dialog">
+                        <div class="modal-content">
+                          <div class="modal-header border-0" style="background: linear-gradient(120deg,#4433ff,#00ffff);">
+                            <h1 class="modal-title fs-5 text-white" id="exampleModalLabel">Konfirmasi Peminjaman Buku</h1>
+                            <button type="button" class="btn-close rounded-circle" data-bs-dismiss="modal" aria-label="Close"></button>
                           </div>
-                          <div class="mb-3">
-                            <p for="nama" class="form-label">
-                              Nama :
-                              <span id="nama"><?= $daftarSiswa['namaSiswa'] ?></span>
-                            </p>
-                            <input type="hidden" name="nama" 
-                            value="<?= $daftarSiswa['namaSiswa'] ?>">
+                          <div class="modal-body">
+                            <form action="peminjam.php" method="POST">
+                              <div class="mb-3">
+                                <p for="nama" class="form-label">
+                                  Buku :
+                                  <span id="nama"><?= $buku['nama'] ?></span>
+                                </p>
+                                <input type="hidden" name="idBuku" value="<?= $buku['id'] ?>">
+                                <input type="hidden" name="nama" 
+                                value="">
+                              </div>
+                              <div class="mb-3">
+                                <p for="nama" class="form-label">
+                                  Nama :
+                                  <span id="nama"><?= $daftarSiswa['namaSiswa'] ?></span>
+                                </p>
+                                <input type="hidden" name="nama" 
+                                value="<?= $daftarSiswa['namaSiswa'] ?>">
+                              </div>
+                              <div class="mb-3">
+                                <p for="kontak" class="form-label">
+                                  Kontak :
+                                  <span id="kontak"><?= $daftarSiswa['kontakSiswa'] ?></span>
+                                </p>
+                                <input type="hidden" name="kontak" 
+                                value="<?= $daftarSiswa['kontakSiswa'] ?>">
+                              </div>
+                              <div class="mb-3">
+                                <p for="kelas" class="form-label">
+                                  Kelas :
+                                  <span id="kelas"><?= $daftarSiswa['namaKelas'] ?></span>
+                                </p>
+                                <input type="hidden" name="kelas" 
+                                value="<?= $daftarSiswa['namaKelas'] ?>">
+                              </div>
+                              <div class="mb-3 border p-2">
+                                <h5>Tata Tertib :</h5>
+                                <ol class="text-danger">
+                                  <li>Lorem ipsum dolor sit amet.</li>
+                                  <li>Lorem ipsum dolor sit amet.</li>
+                                  <li>Lorem ipsum dolor sit amet.</li>
+                                  <li>Lorem ipsum dolor sit amet.</li>
+                                  <li>Lorem ipsum dolor sit amet.</li>
+                                </ol>
+                              </div>
+                              <div class="input-group">
+                                <button type="reset" class="btn btn-outline-danger py-0 px-4 pt-0 w-50 rounded-pill rounded-end">
+                                  <img src="../icon/multiply.png" alt="" width="20rem"><br>
+                                  Cancel
+                                </button>
+                                <input type="hidden" name="pinjam" value="---">
+                                <button type="submit" class="btn btn-outline-primary py-0 px-4 pt-0 w-50 rounded-pill rounded-start" name="peminjamanUser">
+                                  <img src="../icon/clipboard.png" width="20rem" alt=""><br>
+                                  Pinjam
+                                </button>
+                              </div>
+                            </form>
                           </div>
-                          <div class="mb-3">
-                            <p for="kontak" class="form-label">
-                              Kontak :
-                              <span id="kontak"><?= $daftarSiswa['kontakSiswa'] ?></span>
-                            </p>
-                            <input type="hidden" name="kontak" 
-                            value="<?= $daftarSiswa['kontakSiswa'] ?>">
-                          </div>
-                          <div class="mb-3">
-                            <p for="kelas" class="form-label">
-                              Kelas :
-                              <span id="kelas"><?= $daftarSiswa['namaKelas'] ?></span>
-                            </p>
-                            <input type="hidden" name="kelas" 
-                            value="<?= $daftarSiswa['namaKelas'] ?>">
-                          </div>
-                          <div class="mb-3 border p-2">
-                            <h5>Tata Tertib :</h5>
-                            <ol class="text-danger">
-                              <li>Lorem ipsum dolor sit amet.</li>
-                              <li>Lorem ipsum dolor sit amet.</li>
-                              <li>Lorem ipsum dolor sit amet.</li>
-                              <li>Lorem ipsum dolor sit amet.</li>
-                              <li>Lorem ipsum dolor sit amet.</li>
-                            </ol>
-                          </div>
-                          <div class="input-group">
-                            <button type="reset" class="btn btn-outline-danger py-0 px-4 pt-0 w-50 rounded-pill rounded-end">
-                              <img src="../icon/multiply.png" alt="" width="20rem"><br>
-                              Cancel
-                            </button>
-                            <input type="hidden" name="pinjam" value="---">
-                            <button type="submit" class="btn btn-outline-primary py-0 px-4 pt-0 w-50 rounded-pill rounded-start" name="peminjamanUser">
-                              <img src="../icon/clipboard.png" width="20rem" alt=""><br>
-                              Pinjam
-                            </button>
-                          </div>
-                        </form>
+                        </div>
                       </div>
                     </div>
+                    <!-- AKHIR POP UP PEMINJAMAN -->
                   </div>
                 </div>
-                <!-- AKHIR POP UP PEMINJAMAN -->
               </div>
-            </div>
-          </div>
-        </li>
-      </ul>
-      <?php endforeach; ?>
+            </li>
+          </ul>
+        <?php endforeach; ?>
+
+        <nav aria-label="Page navigation example">
+          <ul class="pagination">
+
+            <?php if ( $halAktif > 1 ) : ?>
+            <li class="page-item">
+              <a class="page-link" href="?hal=<?= $halAktif - 1 ?>" aria-label="Previous">
+                <span aria-hidden="true">&laquo;</span>
+              </a>
+            </li>
+            <?php endif; ?>
+
+            <?php for ( $i = 1; $i <= $jmlHal; $i++ ) : ?>
+            <li class="page-item">
+              <a class="page-link" href="?hal=<?= $i ?>">
+                <?= $i ?>
+              </a>
+            </li>
+            <?php endfor; ?>
+
+            <?php if ( $halAktif < $jmlHal ) : ?>
+            <li class="page-item">
+              <a class="page-link" href="?hal=<?= $halAktif + 1 ?>" aria-label="Next">
+                <span aria-hidden="true">&raquo;</span>
+              </a>
+            </li>
+            <?php endif; ?>
+
+          </ul>
+        </nav>
+
+      <?php endif; 
+      if (isset($_POST['inputCari'])) : ?>
+        <?php 
+          $keyword = $_POST['inputCari'];
+          foreach( query("SELECT * FROM buku WHERE nama LIKE '%$keyword%'") as $cariBuku ) : ?>
+          <ul class="list-buku list-group" id="list">
+            <li class="list-buku-item list-group-item bg-white rounded rounded-4 border" style="box-shadow: 5px 5px 5px rgb(120, 120, 120);">
+              <div class="row g-1">
+                <div class="col-md-3">
+                  <img src="../assets/images/<?= $cariBuku['gambar'] ?>" class="img-fluid border rounded rounded-3" width="140rem" alt="...">
+                </div>
+                <div class="col-md-6 w-75">
+                  <div class="card-body p-1">
+                    <h5 class="card-title "><?= $cariBuku['nama'] ?></h5>
+                    <p class="fw-light fs-6 mb-0"><?= $cariBuku['deskripsi'] ?></p>
+                    <div class="d-grid gap-2 px-2 pt-2">
+                      <div class="row gap-2">
+                        <button class="col btn btn-white border btn-sm rounded-pill text-dark fw-semibold p-0" type="button" data-bs-toggle="modal" 
+                        data-bs-target="#detail<?= $cariBuku['id'] ?>" style="box-shadow: 5px 5px 5px rgb(201, 201, 201)">
+                          <img src="../icon/information2.png" width="20rem" alt=""><br>
+                          Detail
+                        </button>
+                        <button class="col btn btn-white border btn-sm rounded-pill text-dark fw-semibold p-0" type="button" data-bs-toggle="modal" data-bs-target="#pinjam<?= $cariBuku['id'] ?>" style="box-shadow: 5px 5px 5px rgb(201, 201, 201)">
+                          <img src="../icon/clipboard.png" width="20rem" alt=""><br>
+                          Pinjam
+                        </button>
+                      </div>
+                    </div>
+                    <!-- AWAL POP UP DETAIL -->
+                    <div class="modal fade" id="detail<?= $cariBuku['id'] ?>" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                      <div class="modal-dialog">
+                        <div class="modal-content">
+                          <div class="modal-header border-0 text-white" style="background: linear-gradient(120deg,#4433ff,#00ffff);">
+                            <h1 class="modal-title fs-5" id="exampleModalLabel">Detail</h1>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                          </div>
+                          <div class="modal-body">
+                            <div class="row g-2">
+                              <div class="col-md-4">
+                                <img src="../assets/images/<?= $cariBuku['gambar'] ?>" class="img-fluid rounded-start" alt="...">
+                              </div>
+                              <div class="col-md-8">
+                                <div class="card-body">
+                                  <h5>Judul : <?= $cariBuku['nama'] ?></h5>
+
+                                  <h6>Penulis : <?= $cariBuku['penulis'] ?></h6>
+                                  <h6>Penerbit : <?= $cariBuku['penerbit'] ?></h6>
+                                  <h6>Tanggal terbit : <?= $cariBuku['tglTerbit'] ?></h6>
+                                  <h6>Tersedia : <?= $cariBuku['jumlah'] ?> Buku</h6>
+                                </div>
+                              </div>
+                              <hr>
+                              <h6 class="fw-bold">Deskripsi : <?= $cariBuku['deskripsi'] ?></h6>
+                              <p></p>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <!-- AKHIR POP UP DETAIL -->
+                    <!-- AWAL POP UP PEMINJAMAN -->
+                    <div class="modal fade" data-bs-backdrop="static" tabindex="-1" id="pinjam<?= $cariBuku['id'] ?>" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                      <div class="modal-dialog">
+                        <div class="modal-content">
+                          <div class="modal-header border-0" style="background: linear-gradient(120deg,#4433ff,#00ffff);">
+                            <h1 class="modal-title fs-5 text-white" id="exampleModalLabel">Konfirmasi Peminjaman Buku</h1>
+                            <button type="button" class="btn-close rounded-circle" data-bs-dismiss="modal" aria-label="Close"></button>
+                          </div>
+                          <div class="modal-body">
+                            <form action="peminjam.php" method="POST">
+                              <div class="mb-3">
+                                <p for="nama" class="form-label">
+                                  Buku :
+                                  <span id="nama"><?= $cariBuku['nama'] ?></span>
+                                </p>
+                                <input type="hidden" name="idBuku" value="<?= $cariBuku['id'] ?>">
+                                <input type="hidden" name="nama" 
+                                value="">
+                              </div>
+                              <div class="mb-3">
+                                <p for="nama" class="form-label">
+                                  Nama :
+                                  <span id="nama"><?= $daftarSiswa['namaSiswa'] ?></span>
+                                </p>
+                                <input type="hidden" name="nama" 
+                                value="<?= $daftarSiswa['namaSiswa'] ?>">
+                              </div>
+                              <div class="mb-3">
+                                <p for="kontak" class="form-label">
+                                  Kontak :
+                                  <span id="kontak"><?= $daftarSiswa['kontakSiswa'] ?></span>
+                                </p>
+                                <input type="hidden" name="kontak" 
+                                value="<?= $daftarSiswa['kontakSiswa'] ?>">
+                              </div>
+                              <div class="mb-3">
+                                <p for="kelas" class="form-label">
+                                  Kelas :
+                                  <span id="kelas"><?= $daftarSiswa['namaKelas'] ?></span>
+                                </p>
+                                <input type="hidden" name="kelas" 
+                                value="<?= $daftarSiswa['namaKelas'] ?>">
+                              </div>
+                              <div class="mb-3 border p-2">
+                                <h5>Tata Tertib :</h5>
+                                <ol class="text-danger">
+                                  <li>Lorem ipsum dolor sit amet.</li>
+                                  <li>Lorem ipsum dolor sit amet.</li>
+                                  <li>Lorem ipsum dolor sit amet.</li>
+                                  <li>Lorem ipsum dolor sit amet.</li>
+                                  <li>Lorem ipsum dolor sit amet.</li>
+                                </ol>
+                              </div>
+                              <div class="input-group">
+                                <button type="reset" class="btn btn-outline-danger py-0 px-4 pt-0 w-50 rounded-pill rounded-end">
+                                  <img src="../icon/multiply.png" alt="" width="20rem"><br>
+                                  Cancel
+                                </button>
+                                <input type="hidden" name="pinjam" value="---">
+                                <button type="submit" class="btn btn-outline-primary py-0 px-4 pt-0 w-50 rounded-pill rounded-start" name="peminjamanUser">
+                                  <img src="../icon/clipboard.png" width="20rem" alt=""><br>
+                                  Pinjam
+                                </button>
+                              </div>
+                            </form>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <!-- AKHIR POP UP PEMINJAMAN -->
+                  </div>
+                </div>
+              </div>
+            </li>
+          </ul>
+        <?php endforeach; ?>
+      <?php endif; ?>
+
     </div>
     <!-- AKHIR BAGIAN KIRI & DAFTAR BUKU -->
     <!-- AWAL BAGIAN KANAN -->
     <div class="col-12 col-md-4 mt-4">
-      <form class="input-group mb-2" role="search">
-        <input class="form-control border-primary mt-2 rounded-pill" type="search" placeholder="Search" aria-label="Search" id="inputCari">
+
+      <form action="" method="POST" class="input-group mb-2" role="search">
+        <input class="form-control border-primary mt-2 rounded-pill" type="search" placeholder="Search" aria-label="Search" name="inputCari">
+        <!-- <button class="btn btn-outline-secondary" type="submit" id="button-addon2">Cari</button> -->
         <!-- <button class="btn btn-primary mt-2 rounded-start rounded-pill">Cari</button> -->
       </form>
       <div class="mt-0 mb-3 bg-white rounded-3 px-2">
@@ -273,6 +458,7 @@ $daftarSiswa = query("SELECT * FROM siswa s INNER JOIN
                   </button>
               </div>
           </form>
+
       </div>
     </div>
     <footer class="main-footer mt-5" style="padding-top: 10px;">

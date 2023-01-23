@@ -28,7 +28,6 @@ $peminjaman = query("SELECT * FROM
 $batasPengembalian = 7;
 
 // SECTION Insert buku
-
 if ( isset($_POST['pinjam']) ){
 
   $idBuku = $_POST['idBuku'];
@@ -36,7 +35,6 @@ if ( isset($_POST['pinjam']) ){
   $namaPeminjam = $_POST['nama'];
   $kelasPeminjam = $_POST['kelas'];
   $kontakPeminjam = $_POST['kontak'];
-
   
   $idKelas = query("SELECT idKelas FROM kelas WHERE namaKelas = '$kelasPeminjam'")[0];
   $idSiswa = query("SELECT idSiswa FROM siswa 
@@ -61,6 +59,7 @@ if ( isset($_POST['pinjam']) ){
 }
 
 // !SECTION Insert buku
+
 
 
 ?>
@@ -104,7 +103,6 @@ if ( isset($_POST['pinjam']) ){
             </ul>
         </div>
                 <!-- !SECTION pagination peminjaman-->
-
 
         <table class="table table-light table-striped">
             <tr class="text-center">
@@ -168,6 +166,7 @@ if ( isset($_POST['pinjam']) ){
                         </button>
                     </div>
                 </form>
+
             </div>
         </div>
         <footer class="main-footer mt-5" style="padding-top: 10px;">

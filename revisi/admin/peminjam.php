@@ -1,3 +1,4 @@
+
 <?php
 
 require '../koneksi.php';
@@ -134,7 +135,6 @@ if (!(isset($_SESSION['login']))) {
 
 ?>
 
-
 <!doctype html>
 <html lang="en">
   <head>
@@ -146,69 +146,9 @@ if (!(isset($_SESSION['login']))) {
     <link rel="stylesheet" href="../css/stylePeminjam.css">
   </head>
   <body>
-    <!-- HEADER -->
-    <nav class="navbar bg-white judul">
-        <div class="container">
-            <a class="navbar-brand fw-bold fs-4 ms-4" href="#">
-                <img src="../../../peminjaman_buku/assets/images/SMKN 1 Cirebon.png" alt="Bootstrap" width="70" height="70">
-                Peminjamaan Buku
-            </a>
-            <div class="d-flex">
-                <button class="border-0 bg-white fw-bold rounded-pill" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight">
-                    <img src="../icon/profile.png" width="40rem" alt="" class="bg-light rounded-pill p-0 py-1 pe-1">Profile
-                </button>
-
-                <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasRight" aria-labelledby="offcanvasRightLabel">
-                    <div class="offcanvas-header">
-                        <h5 class="offcanvas-title" id="offcanvasRightLabel">Admin</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-                    </div>
-                    <div class="offcanvas-body">
-                        <img src="../icon/profile.png" width="100rem" alt="" class="mb-3">
-                        <p>Muhammad Azis Nurfajari</p>
-                        <p>XI RPL 2</p>
-                        <p>0858-6280-0579</p>
-                        <div class="footer">
-                            <button class="border-0 bg-white fw-bold">
-                            <a href="../login-daftar/logout.php"><img src="../icon/logout.png" width="30rem" alt="">Logout</a>
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </nav>
-    <!-- AKHIR HEADER -->
-    <!-- AWAL MENU -->
-    <div class="container">
-        <ul class="nav justify-content-center mt-3 border rounded-pill bg-white" style="box-shadow: 5px 5px 5px #c5c5c5;">
-            <li class="nav-item">
-                <a class="nav-link active" aria-current="page" href="admin.php">
-                    <img src="../icon/book1.png" width="35rem" alt="" class="ms-4"><br>
-                    Daftar Buku
-                </a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link text-dark text-decoration-underline" href="peminjam.php">
-                    <img src="../icon/reader.png" width="35rem" alt="" class="ms-3"><br>
-                    Peminjam
-                </a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="tambahbuku.php">
-                    <img src="../icon/book2.png" width="35rem" alt="" class="ms-4"><br>
-                    Tambah Buku
-                </a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="feedback.php">
-                    <img src="../icon/chat.png" width="35rem" alt="" class="ms-3"><br>
-                    Feedback
-                </a>
-            </li>
-        </ul>
-    </div>
-    <!-- AKHIR MENU -->
+  
+    <?php include 'header-menu-admin.php'; ?>
+  
     <!-- AWAL TABEL -->
     <div class="container mt-4">
         <br>
@@ -238,6 +178,12 @@ if (!(isset($_SESSION['login']))) {
                 <!-- !SECTION pagination peminjaman-->
 
                 <!-- SECTION Table Peminjaman -->
+
+    <!-- AWAL TABEL -->
+    <div class="container mt-4">
+        <br>
+        <!-- AWAL TABEL PEMINJAM -->
+        <h5 class="fw-bold text-white text-center">Daftar Peminjam :</h5>
         <table class="table table-light table-striped">
             <tr class="text-center">
                 <th>No</th>
@@ -256,20 +202,25 @@ if (!(isset($_SESSION['login']))) {
                 <td><?= $i; ?></td>
                 <td><?= $data["namaSiswa"]; ?></td>
                 <td><?= strtoupper($data["namaKelas"]); ?></td>
+
                 <td>
                     <a href="" class="kontak">
                         
                     </a>
                 </td>
+                
+
                 <td><?= $data["nama"]; ?></td>
                 <td><?= $data["waktuPeminjaman"]; ?></td>
                 <td><?= bataswaktu(strtotime($data["waktuPeminjaman"]), $batasPengembalian); ?></td>
                 <td>
                     <a href="kembalikan_data_pengembalian.php?id=<?= $data['idPeminjaman']; ?>&waktupeminjaman=<?= $data['waktuPeminjaman']; ?>&param=admin" onclick="return confirm('Yakin ingin mengebalikan buku?')">
+
                         <img src="../icon/left-arrow.png" width="30rem" alt="">
                     </a>
                 </td>
             </tr>
+
             <?php $i++; ?>
             <?php endforeach; ?>
 
@@ -307,6 +258,7 @@ if (!(isset($_SESSION['login']))) {
             </button>
             <ul class="dropdown-menu text rounded-4">
               <li class="">
+
                 <form action="" method="post">
                 <button class="dropdown-item" type="submit" name="pengembalianASC">Waktu Pengembalian ASC</button>
                 </form>
@@ -339,6 +291,7 @@ if (!(isset($_SESSION['login']))) {
             <th>Waktu Pengembalian</th>
           </tr>
   
+
             <?php $j = 1 ?>
             <?php foreach ($histori as $data2) : ?>
             <tr class="text-center">
@@ -385,6 +338,7 @@ if (!(isset($_SESSION['login']))) {
 
         
         <!-- !SECTION AKHIR TABEL HISTORY -->
+
     </div>
     <!-- AKHIR TABEL -->
     <!-- AWAL FOOTER -->
