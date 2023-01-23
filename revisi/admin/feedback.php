@@ -1,3 +1,41 @@
+
+<?php 
+
+require '../koneksi.php';
+
+// SECTION cek apakah sudah login belom
+if (!(isset($_SESSION['login'])) ) {
+    // redirect (memindahkan user nya ke page lain)
+    header("Location: ../login-daftar/login_admin.php");
+    exit;
+  
+  }
+
+// !SECTION cek apakah sudah login belom
+
+// SECTION pagination feedback
+$dataPerhalaman = 5;
+$jumlahData =  count(query("SELECT * FROM feedback"));
+
+$jumlahHalaman = ceil($jumlahData / $dataPerhalaman);
+
+$halamanAktif = isset( $_GET['halamanFeedback']) ? $_GET['halamanFeedback'] : 1;
+
+$awalData = ($dataPerhalaman * $halamanAktif) - $dataPerhalaman;
+
+// !SECTION pagination feedback
+
+
+// SECTION Tampilkan unek unek
+
+    $dataKomen = query("SELECT * FROM feedback LIMIT $awalData, $dataPerhalaman");
+
+// !SECTION Tampilkan unek unek
+
+
+?>
+
+
 <!doctype html>
 <html lang="en">
   <head>
@@ -16,26 +54,40 @@
     <div class="container mt-4">
         <br>
         <h5 class="fw-bold text-white text-center">Daftar Saran & Kritik :</h5>
+        <!-- SECTION pagination peminjaman-->
+        <div aria-label="Page navigation example" > 
+            <ul class="pagination">
+                <?php if ( $halamanAktif > 1 ) : ?>
+                    <li class="page-item"><a class="page-link" href="?halamanFeedback=<?=$halamanAktif - 1 ?>">Previous</a></li>
+                <?php endif ; ?>
+
+                <?php for( $i=1; $i<=$jumlahHalaman; $i++) : ?>
+                    <?php if ( $i == $halamanAktif ) : ?>
+                        <li class="page-item active"><a class="page-link" href="?halamanFeedback=<?= $i ?>"><?= $i ?></a></li>
+                    <?php else : ?>
+                        <li class="page-item"><a class="page-link" href="?halamanFeedback=<?= $i ?>"><?= $i ?></a></li>
+                    <?php endif ; ?>
+                <?php endfor ; ?>
+                
+                <?php if ( $halamanAktif < $jumlahHalaman ) : ?>
+                    <li class="page-item"><a class="page-link" href="?halamanFeedback=<?=$halamanAktif + 1 ?>">Next</a></li>
+                <?php endif ; ?>
+            </ul>
+        </div>
+        <!-- !SECTION pagination peminjaman-->
+
         <div class="bg-light p-2 mb-3 rounded rounded-3"
         style="box-shadow: 5px 5px 5px rgb(120, 120, 120);
         height: fit-content;">
+        <?php $i=1; ?>
+        <?php foreach( $dataKomen as $dtKomen ) : ?>
             <p>
-                1.Lorem ipsum dolor sit, amet consectetur adipisicing elit. Tempora ratione cum illum 
-                necessitatibus distinctio accusantium adipisci laboriosam dolore iure repellat corporis
-                aliquam minus numquam, autem voluptas blanditiis velit at voluptates.
+                <?=$i?>.<?= $dtKomen['isi']; ?> <br>
+                <div> Tanggal : <?= $dtKomen['tglDibuat']; ?> </div>
             </p>
             <hr>
-            <p>
-                2.Lorem ipsum dolor sit, amet consectetur adipisicing elit. Tempora ratione cum illum 
-                necessitatibus distinctio accusantium adipisci laboriosam dolore iure repellat corporis
-                aliquam minus numquam, autem voluptas blanditiis velit at voluptates.
-            </p>
-            <hr>
-            <p>
-                3.Lorem ipsum dolor sit, amet consectetur adipisicing elit. Tempora ratione cum illum 
-                necessitatibus distinctio accusantium adipisci laboriosam dolore iure repellat corporis
-                aliquam minus numquam, autem voluptas blanditiis velit at voluptates.
-            </p>
+        <?php $i++; ?>
+        <?php endforeach ; ?>
         </div>
     </div>
     <!-- AKHIR FEEDBACK -->

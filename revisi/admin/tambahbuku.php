@@ -1,3 +1,18 @@
+
+<?php
+
+require '../koneksi.php';
+
+// cek apakah sudah login belom
+if (!(isset($_SESSION['login']))) {
+  // redirect (memindahkan user nya ke page lain)
+  header("Location: ../login-daftar/login_admin.php");
+  exit;
+
+}
+
+?>
+
 <!doctype html>
 <html lang="en">
   <head>

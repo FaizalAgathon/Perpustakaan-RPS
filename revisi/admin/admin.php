@@ -1,6 +1,14 @@
 <?php 
 require '../koneksi.php'; 
 
+// cek apakah sudah login belom
+if (!(isset($_SESSION['login']))) {
+  // redirect (memindahkan user nya ke page lain)
+  header("Location: ../login-daftar/login_admin.php");
+  exit;
+
+}
+
 if ( isset($_POST['tambahBuku']) ){
 
   $judul = $_POST['judul'];
@@ -296,8 +304,10 @@ if ( isset($_POST['tambahBuku']) ){
     <!-- AKHIR BAGIAN KIRI & DAFTAR BUKU -->
     <!-- BAGIAN KANAN -->
     <div class="col-12 col-md-4 mt-4">
+
       <form action="" method="POST" class="input-group mb-2" role="search">
         <input class="form-control border-primary mt-2 rounded-pill" type="search" placeholder="Search" aria-label="Search" name="inputCari">
+
         <!-- <button class="btn btn-primary mt-2 rounded-start rounded-pill">Cari</button> -->
       </form>
       <div class="mt-0 mb-3 bg-white rounded-3 px-2">

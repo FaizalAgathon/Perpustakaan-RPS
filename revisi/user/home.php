@@ -2,36 +2,38 @@
 
 require '../koneksi.php';
 
-// if (!isset($_POST['login'])) {
-  // header("Location: ../login-daftar/login_siswa.php");
-// } elseif ($_SESSION['user'] == true) {
-  // header("Location: home.php");
-// }
 
-// $nama = $_POST['nama'];
-// $kelas = $_POST['kelas'];
-// $kontak = $_POST['kontak'];
+if (!isset($_POST['login'])) {
+  header("Location: ../login-daftar/login_siswa.php");
+} elseif ($_SESSION['user'] == true) {
+  // header("Location: home.php");
+}
+
+$nama = $_POST['nama'];
+$kelas = $_POST['kelas'];
+$kontak = $_POST['kontak'];
 // $password = $_POST['password'];
 
-// $idKelas = query("SELECT idKelas FROM kelas WHERE namaKelas = '$kelas'")[0];
-// $result = mysqli_query($conn, "SELECT * FROM siswa 
-//     WHERE idKelas = $idKelas[idKelas] AND
-//     namaSiswa = '$nama' AND 
-//     kontakSiswa = '$kontak'");
+$idKelas = query("SELECT idKelas FROM kelas WHERE namaKelas = '$kelas'")[0];
+$result = mysqli_query($conn, "SELECT * FROM siswa 
+    WHERE idKelas = $idKelas[idKelas] AND
+    namaSiswa = '$nama' AND 
+    kontakSiswa = '$kontak'");
 
-// if (mysqli_num_rows($result) != 1) {
+if (mysqli_num_rows($result) != 1) {
 
-//   header("Location: ../login-daftar/login_siswa.php?gagal");
-// } else {
+  header("Location: ../login-daftar/login_siswa.php?gagal");
+} else {
 
-//   $_SESSION['user'] = true;
-// }
+  $_SESSION['user'] = true;
+}
 
-// $daftarSiswa = query("SELECT * FROM siswa s INNER JOIN
-//     kelas k ON s.idKelas = k.idKelas 
-//     WHERE namaSiswa = '$nama' AND
-//     namaKelas = '$kelas' AND 
-//     kontakSiswa = '$kontak'")[0];
+$daftarSiswa = query("SELECT * FROM siswa s INNER JOIN
+    kelas k ON s.idKelas = k.idKelas 
+    WHERE namaSiswa = '$nama' AND
+    namaKelas = '$kelas' AND 
+    kontakSiswa = '$kontak'")[0];
+
 
 
 ?>
@@ -371,6 +373,7 @@ require '../koneksi.php';
     <!-- AKHIR BAGIAN KIRI & DAFTAR BUKU -->
     <!-- AWAL BAGIAN KANAN -->
     <div class="col-12 col-md-4 mt-4">
+
       <form action="" method="POST" class="input-group mb-2" role="search">
         <input class="form-control border-primary mt-2 rounded-pill" type="search" placeholder="Search" aria-label="Search" name="inputCari">
         <!-- <button class="btn btn-outline-secondary" type="submit" id="button-addon2">Cari</button> -->
@@ -444,14 +447,18 @@ require '../koneksi.php';
                 1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x51cf481547b4b319!2sSMK%20Negeri%201%20Cirebon!5e0!3m2!1sid!2sid!4v1674230224751!5m2!1sid!2sid" width="400" height="350" style="border: 0;" allowfullscreen="" class="rounded-4" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
       </div>
       <div class="col mt-3 border rounded-4" style="box-shadow: 3px 3px 5px rgb(201, 201, 201);">
-        <div class="p-2">
-          <label class="text-white mb-0">Kritik Dan Saran :</label><br>
-          <textarea class="form-control w-75 bg-light" aria-label="With textarea"></textarea>
-          <button type="submit" class="mt-2 btn btn-light py-0">
-            <img src="../icon/send.png" width="20rem" alt="">
-            Kirim
-          </button>
-        </div>
+          <form action="" method="post">
+              <div class="p-2">
+                  <p class="text-white mb-0">Kritik Dan Saran :</p><br>
+                  <input type="text" name="param" value="home" hidden>
+                  <textarea name="komen" class="form-control w-75 bg-light" aria-label="With textarea"></textarea>
+                  <button name="feedback" type="submit" class="mt-2 btn btn-light py-0">
+                      <img src="../icon/send.png" width="20rem" alt="">
+                      Kirim
+                  </button>
+              </div>
+          </form>
+
       </div>
     </div>
     <footer class="main-footer mt-5" style="padding-top: 10px;">

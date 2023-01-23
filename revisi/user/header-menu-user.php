@@ -32,6 +32,7 @@
   </nav>
   <!-- AKHIR HEADER -->
 
+
   <?php 
 
   $url = $_SERVER['REQUEST_URI'];
@@ -45,19 +46,23 @@
   <div class="container">
     <ul class="nav justify-content-center mt-3 border rounded-pill bg-white" style="box-shadow: 5px 5px 5px #c5c5c5;">
       <li class="nav-item">
+
         <a class="nav-link <?= $url == 'home.php' ? 'active text-dark text-decoration-underline' : '' ?> " aria-current="page" href="home.php">
           <img src="../icon/book1.png" width="35rem" alt="" class="ms-4"><br>
           Daftar Buku
         </a>
       </li>
       <li class="nav-item">
+
         <a class="nav-link <?= $url == 'peminjam.php' ? 'active text-dark text-decoration-underline' : '' ?>" href="peminjam.php">
           <img src="../icon/reader.png" width="35rem" alt="" class="ms-3"><br>
           Peminjam
         </a>
       </li>
       <li class="nav-item" id="footer2">
+
         <a class="nav-link" href="home.php#footer" data-bs-target="">
+
           <img src="../icon/chat.png" width="35rem" alt="" class="ms-3"><br>
           Feedback
         </a>
