@@ -2,40 +2,25 @@
     require 'koneksi.php';
     
     //Menentukan baris pada table
-    $idpengembali = $_GET['id_pengembali'];
+    $idpengembali = $_GET['id'];
+    $waktuPeminjaman = $_GET['waktupeminjaman'];
+    $waktuPengembalian = date("Y-m-d");
 
-    //Mengambil data dari table
-    $histori = query("SELECT * FROM pengembalian WHERE id_pengembali='$idpengembali'");
-    foreach($histori as $hstr){
-        $namahstr = $hstr['nama_pengembali'];
-        $kelashstr = $hstr['kelas_pengembali'];
-        $kontakhstr = $hstr['kontak_pengembali'];
-        $bukuhstr = $hstr['id_buku'];
-        $waktupeminjamanhstr = $hstr['waktu_peminjaman'];
-        $waktupengembalianhstr = date("Y-m-j");
-    }
-    $tambah = "INSERT INTO histori VALUES('', '$namahstr', '$kelashstr', '$kontakhstr', '$bukuhstr', '$waktupeminjamanhstr', '$waktupengembalianhstr')";
-    mysqli_query($conn, $tambah);
+// Mengambil Data
+$pengembalian = query("SELECT 
+                      -- s.idSiswa, s.namaSiswa, k.namaKelas, s.kontakSiswa, b.nama, p.waktuPeminjaman
+                      *
+                      FROM
+                      siswa s INNER JOIN
+                      kelas k ON s.idKelas = k.idKelas INNER JOIN
+                      peminjaman p ON s.idSiswa = p.idSiswa INNER JOIN
+                      buku b ON s.idSiswa = p.idSiswa 
+                      AND p.idBuku = b.id WHERE idPeminjaman = $idpengembali")[0];
 
+    mysqli_query($conn,"INSERT INTO histori VALUES ( '', '$pengembalian[idSiswa]', '$pengembalian[idBuku]', '$waktuPeminjaman', '$waktuPengembalian')" );
 
-    //Menghapus Data Pengembalian
-    $hapus = "DELETE FROM pengembalian WHERE id_pengembali='$idpengembali'";
-    mysqli_query($conn, $hapus);
+    mysqli_query($conn,"DELETE FROM peminjaman WHERE idPeminjaman = $idpengembali");
 
-    if( hapus($idpengembali) > 0 ){
-        echo "
-        <script>
-        alert('Data Tidak Berhasil dihapus');
-        document.location.href = 'login.php';
-        </script>
-        ";
-    } else {
-        echo"
-        <script>
-        alert('Terima Kasih Telah Membaca Buku');
-        document.location.href = 'login.php';
-        </script>
-        ";
-    }
+    header("Location: admin.php");
 
 ?>

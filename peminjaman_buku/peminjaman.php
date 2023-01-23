@@ -8,14 +8,41 @@ $namaPeminjam = $_POST['nama'];
 $kelasPeminjam = $_POST['kelas'];
 $kontakPeminjam = $_POST['kontak'];
 
-$namaPeminjam = $namaPeminjam . "-" . rand(100,999);
-$kelasPeminjam = strtoupper($kelasPeminjam);
+// var_dump($namaPeminjam); echo '<br>';
+// var_dump($kelasPeminjam); echo '<br>';
+// var_dump($kontakPeminjam); echo '<br>';
+
+$idKelas = query("SELECT idKelas FROM kelas WHERE namaKelas = '$kelasPeminjam'")[0];
+$idSiswa = query("SELECT idSiswa FROM siswa 
+  WHERE idKelas = $idKelas[idKelas] AND 
+  namaSiswa = '$namaPeminjam' AND 
+  kontakSiswa = '$kontakPeminjam'")[0];
+
+// var_dump($idKelas);
+// echo '<br>';
+// var_dump($idSiswa);
+
+// $namaPeminjam = $namaPeminjam . "-" . rand(100,999);
+// $kelasPeminjam = strtoupper($kelasPeminjam);
 $waktuRT = date('Y-m-d');
 
-mysqli_query($conn,"INSERT INTO pengembalian 
-  VALUES (NULL,'$namaPeminjam','$kelasPeminjam','$kontakPeminjam','$idBuku','$waktuRT')");
+$peminjaman = mysqli_query($conn,"INSERT INTO peminjaman 
+  VALUES (NULL,'$idSiswa[idSiswa]','$idBuku','$waktuRT')")[0];
 
-header("Location:admin.php");
+if ( $peminjaman ){
+  $buku = query("SELECT * FROM buku WHERE id = $idBuku")[0];
+  $jumlahBuku = $buku['jumlah'] - 1;
+  mysqli_query($conn,"UPDATE buku SET jumlah = $jumlahBuku
+    WHERE id = $idBuku");
+  mysqli_query($conn,"UPDATE buku SET jumlah_dipinjam = $buku[jumlah_dipinjam] + 1
+    WHERE id = $idBuku");
+}
+
+header("Location:index.php");
+// if ( isset($_POST['peminjamanUser']) ){
+// } else if ( isset($_POST['peminjamanAdmin']) ){
+//   header("Location:admin.php");
+// }
 
 // $idPeminjam = query("SELECT id FROM peminjam WHERE nama = '$namaPeminjam'")[0];
 
