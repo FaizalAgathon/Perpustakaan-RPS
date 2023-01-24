@@ -83,7 +83,7 @@ $awalData = ($dataPerhalaman * $halamanAktif) - $dataPerhalaman;
         <?php foreach( $dataKomen as $dtKomen ) : ?>
             <p>
                 <?=$i?>.<?= $dtKomen['isi']; ?> <br>
-                <div> Tanggal : <?= $dtKomen['tglDibuat']; ?> </div>
+                <div> Tanggal : <?= $dtKomen['tgl']; ?> </div>
             </p>
             <hr>
         <?php $i++; ?>

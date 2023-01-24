@@ -58,7 +58,6 @@ session_start();
 
 // !SECTION Sort by pada peminjaman admin
 
-
 // SECTION tambah data feedback
 
 if(isset($_POST['feedback'])){
@@ -66,7 +65,7 @@ if(isset($_POST['feedback'])){
     $komen = $_POST['komen'];
     $waktuKomen = date("Y-m-d");
 
-    $qry = sprintf("INSERT INTO feedback(id, isi, tglDibuat) VALUES (NULL, '%s', '$waktuKomen') ", $komen);
+    $qry = sprintf("INSERT INTO feedback(id, isi, tgl) VALUES (NULL, '%s', '$waktuKomen') ", $komen);
 
 if ( $_POST['param'] == "home") {
     mysqli_query($conn, $qry);

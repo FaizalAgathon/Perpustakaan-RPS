@@ -1,3 +1,5 @@
+  <link rel="stylesheet" href="../css/styleAdmin.css">
+  
   <!-- HEADER -->
   <nav class="navbar bg-primary judul">
     <div class="container">
@@ -38,6 +40,11 @@
 
   $url = explode("/", $url);
   $url = array_pop($url);
+
+  if ( explode('?', $url) ){
+    $url = explode('?', $url);
+    $url = $url[0];
+  }
 
   ?>
 

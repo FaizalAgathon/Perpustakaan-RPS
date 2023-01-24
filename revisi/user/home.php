@@ -12,7 +12,6 @@ if (!isset($_POST['login'])) {
 $nama = $_POST['nama'];
 $kelas = $_POST['kelas'];
 $kontak = $_POST['kontak'];
-// $password = $_POST['password'];
 
 $idKelas = query("SELECT idKelas FROM kelas WHERE namaKelas = '$kelas'")[0];
 $result = mysqli_query($conn, "SELECT * FROM siswa 

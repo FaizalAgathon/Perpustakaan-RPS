@@ -71,7 +71,7 @@ if ( isset($_POST['tambahBuku']) ){
     <div class="col-12 col-md-8 mb-3 mt-4">
       <?php 
 
-      $jmlDataperHal = 5;
+      $jmlDataperHal = 2;
       $jmlData = count(query("SELECT * FROM buku"));
       $jmlHal = ceil($jmlData / $jmlDataperHal);
       $halAktif = ( isset($_GET['hal']) ) ? $_GET['hal'] : 1;
@@ -190,11 +190,12 @@ if ( isset($_POST['tambahBuku']) ){
           </ul>
         </nav>
       <?php endif; ?>
-      <?php if ( isset($_POST['inputCari']) OR isset($_GET['halCari']) ) : ?>
+      <?php if ( isset($_GET['halCari']) ) : ?>
         <?php 
-        $keyword = $_POST['inputCari'];
+        $keyword = $_GET['halCari'];
         $jmlDataCari = count(query("SELECT * FROM buku WHERE nama LIKE '%$keyword%'"));
         $jmlHalCari = ceil($jmlDataCari / $jmlDataperHal);
+
         foreach ( query("SELECT * FROM buku WHERE nama LIKE '%$keyword%' LIMIT $awalData, $jmlDataperHal") as $cariBuku ) : ?>
           <ul class="list-buku list-group" id="list">
             <li class="list-buku-item list-group-item bg-white rounded rounded-4 border" style="box-shadow: 5px 5px 5px rgb(120, 120, 120);">
@@ -274,39 +275,41 @@ if ( isset($_POST['tambahBuku']) ){
             </li>
           </ul>
         <?php endforeach; ?>
+        <?php if ( $jmlHalCari != 1 && $_GET['halCari'] > 1 ) : ?>
         <nav aria-label="Page navigation example">
           <ul class="pagination">
             <?php if ( $halAktif > 1 ) : ?>
             <li class="page-item">
-              <a class="page-link" href="?halCari=<?= $halAktif - 1 ?>" aria-label="Previous">
+              <a class="page-link" href="?halCari=<?= $keyword ?>&hal=<?= $halAktif - 1 ?>" aria-label="Previous">
                 <span aria-hidden="true">&laquo;</span>
               </a>
             </li>
             <?php endif; ?>
             <?php for ( $i = 1; $i <= $jmlHalCari; $i++ ) : ?>
-            <li class="page-item">
-              <a class="page-link" href="?halCari=<?= $i ?>">
+            <li class="page-item <?= $i == $halAktif ? 'active' : '' ?>">
+              <a class="page-link" href="?halCari=<?= $keyword ?>&hal=<?= $i ?>">
                 <?= $i ?>
               </a>
             </li>
             <?php endfor; ?>
             <?php if ( $halAktif < $jmlHalCari ) : ?>
             <li class="page-item">
-              <a class="page-link" href="?halCari=<?= $halAktif + 1 ?>" aria-label="Next">
+              <a class="page-link" href="?halCari=<?= $keyword ?>&hal=<?= $halAktif + 1 ?>" aria-label="Next">
                 <span aria-hidden="true">&raquo;</span>
               </a>
             </li>
             <?php endif; ?>
           </ul>
         </nav>
+        <?php endif; ?>
       <?php endif; ?>
     </div>
     <!-- AKHIR BAGIAN KIRI & DAFTAR BUKU -->
     <!-- BAGIAN KANAN -->
     <div class="col-12 col-md-4 mt-4">
 
-      <form action="" method="POST" class="input-group mb-2" role="search">
-        <input class="form-control border-primary mt-2 rounded-pill" type="search" placeholder="Search" aria-label="Search" name="inputCari">
+      <form action="" method="GET" class="input-group mb-2" role="search">
+        <input class="form-control border-primary mt-2 rounded-pill" type="search" placeholder="Search" aria-label="Search" name="halCari">
 
         <!-- <button class="btn btn-primary mt-2 rounded-start rounded-pill">Cari</button> -->
       </form>
@@ -342,15 +345,20 @@ if ( isset($_POST['tambahBuku']) ){
       <!-- SLIDE GAMBAR -->
       <div id="carouselExampleControls" class="carousel slide mt-2" data-bs-ride="carousel">
         <div class="carousel-inner rounded rounded-4 border border-2">
-          <div class="carousel-item active">
-            <img src="../../../peminjaman_buku/background/bg4.jpg" class="d-block w-100" alt="...">
+          <?php 
+          $active = 'active';
+          foreach ( query("SELECT * FROM carousel") as $carousel ) : ?>
+          <div class="carousel-item <?= $active ?> ">
+            <!-- Button trigger modal -->
+            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+              Edit
+            </button>
+            <img src="../assets/carousel/<?= $carousel['namaCarousel'] ?>" class="d-block w-100" alt="...">
+            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+              Hapus
+            </button>
           </div>
-          <div class="carousel-item">
-            <img src="../../../peminjaman_buku/background/bg5.jpg" class="d-block w-100" alt="...">
-          </div>
-          <div class="carousel-item">
-            <img src="../../../peminjaman_buku/background/bg6.jpg" class="d-block w-100" alt="...">
-          </div>
+          <?php endforeach; ?>
         </div>
         <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="prev">
           <span class="carousel-control-prev-icon" aria-hidden="true"></span>
@@ -365,6 +373,28 @@ if ( isset($_POST['tambahBuku']) ){
     </div>
     <!-- AKHIR BAGIAN KANAN -->
   </div>
+
+
+
+<!-- Modal -->
+<div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="staticBackdropLabel">Modal title</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        ...
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary">Understood</button>
+      </div>
+    </div>
+  </div>
+</div>
+
   <!-- AWAL FOOTER -->
   <div class="bg-dark mt-3 p-1 pt-2 w-100" id="footer" style="margin-bottom: -2rem;">
     <footer class="main-footer mt-3" style="padding-top: 10px;">

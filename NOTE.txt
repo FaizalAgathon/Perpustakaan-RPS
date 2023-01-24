@@ -1,0 +1,27 @@
+
+*PROGRESS*
+_ADMIN_
++ pagination daftar buku
++ feedback (read, delete)
++ cari buku
++ navigasi
+
+_USER_
++ feedback (create)
++ cari buku
++ navigasi
+
+_DataBase_
++ Carousel ( idCarousel, namaCarousel )
+
+**** TODO ****
+_ADMIN_
+- carousel
+- akun header
+- quotes
+
+_USER_
+- pagination daftar buku
+- carousel
+- akun header
+- quotes

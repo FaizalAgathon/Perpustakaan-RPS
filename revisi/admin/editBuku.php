@@ -15,7 +15,7 @@ $ukuranFile = $_FILES['gambar']['size'];
 $rand = rand(1000,9999);
 $gambarBuku = $rand . '-' . $namaFile;
 // $gambarBukuKosong = $rand . '-' . 'ppNoImg.png';
-$batasUkuranGambar = 3145728; // KB
+$batasUkuranGambar = 5000000; // KB
 
 if ($ukuranFile == NULL) {
   
@@ -28,13 +28,11 @@ if ($ukuranFile == NULL) {
     jumlah = '$jumlahBuku'
     WHERE id = $idBuku");
 
-  header("Location:admin.php");
+  header("Location: admin.php");
 
-}
+} else if ( $ukuranFile <= $batasUkuranGambar ){		
 
-if ( $ukuranFile != NULL && $ukuranFile < $batasUkuranGambar ){		
-
-  move_uploaded_file($_FILES['gambar']['tmp_name'], 'assets/images/'.$gambarBuku);
+  move_uploaded_file($_FILES['gambar']['tmp_name'], '../assets/images/' . $gambarBuku);
 
   $editBuku = mysqli_query($conn,"UPDATE buku SET 
     nama = '$namaBuku',
@@ -44,10 +42,10 @@ if ( $ukuranFile != NULL && $ukuranFile < $batasUkuranGambar ){
     gambar = '$gambarBuku'
     WHERE id = $idBuku");
 
-  header("Location:admin.php");
+  header("Location: admin.php");
 
 }else{
-  header("Location:admin.php");
+  header("Location: admin.php");
 }
 
 
